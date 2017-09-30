@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="webview_btn_title">跳转到webview activity</string>
+</resources>
