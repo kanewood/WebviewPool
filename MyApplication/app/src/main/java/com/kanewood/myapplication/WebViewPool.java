@@ -101,12 +101,11 @@ public class WebViewPool {
     }
 
     /**
-     * 回收webview
+     * 回收webview ,不解绑
      *@param webView 需要被回收的webview
      *
      * */
     public void removeWebView(WebView webView) {
-        if (webView != null) {
             webView.loadUrl("");
             webView.stopLoading();
             webView.setWebChromeClient(null);
@@ -129,7 +128,6 @@ public class WebViewPool {
             webView.getSettings().setUserAgentString("android_client");
             webView.getSettings().setDefaultTextEncodingName("UTF-8");
             webView.getSettings().setDefaultFontSize(16);
-        } else {
             synchronized (lock) {
                 inUse.remove(webView);
                 if (available.size() < maxSize) {
@@ -139,6 +137,45 @@ public class WebViewPool {
                 }
                 currentSize--;
             }
+    }
+
+    /**
+     * 回收webview ,解绑
+     *@param webView 需要被回收的webview
+     *
+     * */
+    public void removeWebView(ViewGroup view, WebView webView) {
+        view.removeView(webView);
+        webView.loadUrl("");
+        webView.stopLoading();
+        webView.setWebChromeClient(null);
+        webView.setWebViewClient(null);
+        webView.clearCache(true);
+        webView.clearHistory();
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式(true);
+        webView.getSettings().setAppCacheEnabled(false);
+        webView.getSettings().setSupportZoom(false);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setDomStorageEnabled(true);
+
+        webView.getSettings().setBuiltInZoomControls(false);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+
+        webView.getSettings().setLoadWithOverviewMode(false);
+
+        webView.getSettings().setUserAgentString("android_client");
+        webView.getSettings().setDefaultTextEncodingName("UTF-8");
+        webView.getSettings().setDefaultFontSize(16);
+        synchronized (lock) {
+            inUse.remove(webView);
+            if (available.size() < maxSize) {
+                available.add(webView);
+            } else {
+                webView = null;
+            }
+            currentSize--;
         }
     }
 

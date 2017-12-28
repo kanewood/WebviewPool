@@ -26,6 +26,6 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        WebViewPool.getInstance().removeWebView(mWebView);
+        WebViewPool.getInstance().removeWebView(mWebviewRoot,mWebView);
     }
 }
